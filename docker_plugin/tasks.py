@@ -59,7 +59,7 @@ def create_container(params, daemon_client=None, **_):
         return
 
     arguments = dict()
-    arguments['name'] = ctx.instance['id']
+    arguments['name'] = ctx.instance.id
     arguments['image'] = get_image(client)
     arguments.update(params)
 

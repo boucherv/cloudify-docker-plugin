@@ -105,11 +105,13 @@ def start(params, processes_to_wait_for, retry_interval,
     except APIError as e:
         raise NonRecoverableError(
             'Failed to get list of containers: {0}.'.format(str(e)))
-    exp_port = int(ports)+len(response)
-    for ports in params['port_bindings']:
-        params['port_bindings'][unicode(exp_port)] = params['port_bindings'].pop(ports)
-
+    
     arguments.update(params)
+    exp_port = int(ports)+len(response)
+    for ports in arguments['port_bindings']:
+        arguments['port_bindings'][unicode(exp_port)] = arguments['port_bindings'].pop(ports)
+
+    
     ctx.instance.runtime_properties['exp_port'] = exp_port
     ctx.logger.info('Start arguments: {0}'.format(arguments))
 

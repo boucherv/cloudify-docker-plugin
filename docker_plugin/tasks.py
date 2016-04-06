@@ -99,8 +99,19 @@ def start(params, processes_to_wait_for, retry_interval,
 
     container_id = ctx.instance.runtime_properties['container_id']
     arguments = {'container': container_id}
-    arguments.update(params)
+    relationships = ctx.instance.relationships
+    public_ip = ''
+    for element in relationships:
+        if element.type == 'cloudify.relationships.contained_in':
+            vm_ctx = element
 
+    port_used = 0
+    port_used = vm_ctx.target.instance.runtime_properties['port_used']
+    for ports in params['port_bindings']:
+        params['port_bindings'][int(ports)+port_used] = params['port_bindings'].pop(ports)
+
+    arguments.update(params)
+    vm_ctx.target.instance.runtime_properties['port_used'] = port_used + 1
     ctx.logger.info('Start arguments: {0}'.format(arguments))
 
     try:

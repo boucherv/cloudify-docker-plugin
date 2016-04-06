@@ -99,21 +99,17 @@ def start(params, processes_to_wait_for, retry_interval,
 
     container_id = ctx.instance.runtime_properties['container_id']
     arguments = {'container': container_id}
-    relationships = ctx.instance.relationships
-    public_ip = ''
-    for element in relationships:
-        if element.type == 'cloudify.relationships.contained_in':
-            vm_ctx = element
     
-    port_used = 0
-    if 'port_used' in vm_ctx.target.instance.runtime_properties:
-        port_used = vm_ctx.target.instance.runtime_properties['port_used']
+    try:
+        response = client.containers()
+    except APIError as e:
+        raise NonRecoverableError(
+            'Failed to get list of containers: {0}.'.format(str(e)))
 
     for ports in params['port_bindings']:
-        params['port_bindings'][int(ports)+port_used] = params['port_bindings'].pop(ports)
+        params['port_bindings'][int(ports)+len(response)] = params['port_bindings'].pop(ports)
 
     arguments.update(params)
-    vm_ctx.target.instance.runtime_properties['port_used'] = port_used + 1
     ctx.logger.info('Start arguments: {0}'.format(arguments))
 
     try:

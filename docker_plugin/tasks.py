@@ -107,7 +107,7 @@ def start(params, processes_to_wait_for, retry_interval,
             'Failed to get list of containers: {0}.'.format(str(e)))
 
     for ports in params['port_bindings']:
-        params['port_bindings'][str(int(ports)+len(response))] = params['port_bindings'].pop(ports)
+        params['port_bindings'][unicode(int(ports)+len(response))] = params['port_bindings'].pop(ports)
 
     arguments.update(params)
     ctx.logger.info('Start arguments: {0}'.format(arguments))

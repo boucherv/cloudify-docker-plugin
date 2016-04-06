@@ -107,11 +107,10 @@ def start(params, processes_to_wait_for, retry_interval,
             'Failed to get list of containers: {0}.'.format(str(e)))
     
     arguments.update(params)
-    exp_port = int(ports)+len(response)
     for ports in arguments['port_bindings']:
-        arguments['port_bindings'][unicode(exp_port)] = arguments['port_bindings'].pop(ports)
+        exp_port = arguments['port_bindings'][ports]+len(response)
+        arguments['port_bindings'][ports] = exp_port
 
-    
     ctx.instance.runtime_properties['exp_port'] = exp_port
     ctx.logger.info('Start arguments: {0}'.format(arguments))
 

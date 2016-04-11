@@ -119,6 +119,7 @@ def start(params, processes_to_wait_for, retry_interval,
                 break
 
     ctx.instance.runtime_properties['exp_port'] = new_port
+    ctx.instance.runtime_properties['exec_id'] = ctx.execution_id()
     ctx.logger.info('Start arguments: {0}'.format(arguments))
 
     try:

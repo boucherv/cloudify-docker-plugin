@@ -30,7 +30,7 @@ from docker_plugin import docker_client
 
 
 @operation
-def create_container(params, daemon_client=None, **_):
+def create_container(params, daemon_client=None, other_params=None, **_):
     """ cloudify.docker.container type create lifecycle operation.
         Creates a container that can then be .start() ed.
 
@@ -57,7 +57,15 @@ def create_container(params, daemon_client=None, **_):
             utils.get_container_id_from_name(
                 ctx.node.properties['name'], client)
         return
-
+    
+    if other_params:
+        ports_range = other_params.get("ports_range", None)
+        for p_range in ports_range:
+            for p in range(p_range['min'], p_range['max']):
+                if not isinstance(params['ports'], list):
+                    params['ports']=[]
+                params['ports'].append(p)
+    
     arguments = dict()
     arguments['name'] = ctx.instance.id
     arguments['image'] = get_image(client)

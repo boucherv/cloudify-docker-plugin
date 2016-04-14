@@ -75,16 +75,21 @@ def create_container(params, daemon_client=None, other_params=None, **_):
                 params['ports'].append(new_port)
                 params['ports'].append((new_port, 'udp'))
                 break
-    
+    ctx.logger.info('Other arguments: {0}'.format(other_params))
     if other_params:
         ports_range = other_params.get("ports_range", None)
         for p_range in ports_range:
-            range_size = p_range['max']-p_range['min']
+            range_size = p_range['size']
             i = p_range['min']
             while i < p_range['min'] + range_size*10:
                 i = i + range_size
                 if i not in port_used:
-                    params['ports'].append((p, 'udp'))
+                    for p in range(i, i+range_size):
+                        if p_range['protocol'] = 'udp':
+                            params['ports'].append((p, 'udp'))
+                        else:
+                            params['ports'].append(p)
+                    break
     
     arguments = dict()
     arguments['name'] = ctx.instance.id
@@ -105,7 +110,7 @@ def create_container(params, daemon_client=None, other_params=None, **_):
 
 @operation
 def start(params, processes_to_wait_for, retry_interval,
-          daemon_client=None, **_):
+          daemon_client=None, other_params=None, **_):
     """ cloudify.docker.container type start lifecycle operation.
         Any properties and runtime_properties set in the create
         lifecycle operation also available in start.
@@ -143,8 +148,25 @@ def start(params, processes_to_wait_for, retry_interval,
         old_port = arguments['port_bindings'][ports]
         for new_port in range(old_port, old_port+100):
             if new_port not in port_used:
-                arguments['port_bindings'][ports] = new_port 
+                arguments['port_bindings'].pop(ports)
+                arguments['port_bindings'][str(new_port)+'/udp'] = new_port 
                 break
+
+    ctx.logger.info('Other arguments: {0}'.format(other_params))
+    if other_params:
+        ports_range = other_params.get("ports_range", None)
+        for p_range in ports_range:
+            range_size = p_range['size']
+            i = p_range['min']
+            while i < p_range['min'] + range_size*10:
+                i = i + range_size
+                if i not in port_used:
+                    for p in range(i, i+range_size):
+                        if p_range['protocol'] = 'udp':
+                            arguments['port_bindings'][str(new_port)+'/udp'] = p
+                        else:
+                            arguments['port_bindings'][str(new_port)] = p
+                    break
 
     ctx.instance.runtime_properties['exp_port'] = new_port
     ctx.instance.runtime_properties['exec_id'] = ctx.execution_id

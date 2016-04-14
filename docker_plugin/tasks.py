@@ -57,14 +57,34 @@ def create_container(params, daemon_client=None, other_params=None, **_):
             utils.get_container_id_from_name(
                 ctx.node.properties['name'], client)
         return
+    try:
+        response = client.containers()
+    except APIError as e:
+        raise NonRecoverableError(
+            'Failed to get list of containers: {0}.'.format(str(e)))
+    port_used = []
+    for ct in response:
+        for port in ct['Ports']:
+            port_used.append(port['PublicPort'])
+    if not isinstance(params['ports'], list):
+        params['ports']=[]
+    for port in params['ports']:
+        for new_port in range(port, port+100):
+            if new_port not in port_used:
+                params['ports'].remove(port)
+                params['ports'].append(new_port)
+                params['ports'].append((new_port, 'udp'))
+                break
     
     if other_params:
         ports_range = other_params.get("ports_range", None)
         for p_range in ports_range:
-            for p in range(p_range['min'], p_range['max']):
-                if not isinstance(params['ports'], list):
-                    params['ports']=[]
-                params['ports'].append(p)
+            range_size = p_range['max']-p_range['min']
+            i = p_range['min']
+            while i < p_range['min'] + range_size*10:
+                i = i + range_size
+                if i not in port_used:
+                    params['ports'].append((p, 'udp'))
     
     arguments = dict()
     arguments['name'] = ctx.instance.id

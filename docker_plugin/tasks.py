@@ -67,7 +67,7 @@ def create_container(params, daemon_client=None, other_params=None, **_):
         for port in ct['Ports']:
             port_used.append(port['PublicPort'])
     if not isinstance(params['ports'], list):
-        params['ports']=[]
+        params['ports'] = []
     for port in params['ports']:
         for new_port in range(port, port+100):
             if new_port not in port_used:
@@ -90,7 +90,7 @@ def create_container(params, daemon_client=None, other_params=None, **_):
                         else:
                             params['ports'].append(p)
                     break
-    
+
     arguments = dict()
     arguments['name'] = ctx.instance.id
     arguments['image'] = get_image(client)
@@ -132,7 +132,7 @@ def start(params, processes_to_wait_for, retry_interval,
 
     container_id = ctx.instance.runtime_properties['container_id']
     arguments = {'container': container_id}
-    
+
     try:
         response = client.containers()
     except APIError as e:
@@ -149,7 +149,7 @@ def start(params, processes_to_wait_for, retry_interval,
         for new_port in range(old_port, old_port+100):
             if new_port not in port_used:
                 arguments['port_bindings'].pop(ports)
-                arguments['port_bindings'][str(new_port)+'/udp'] = new_port 
+                arguments['port_bindings'][str(new_port)+'/udp'] = new_port
                 break
 
     ctx.logger.info('Other arguments: {0}'.format(other_params))

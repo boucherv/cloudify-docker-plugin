@@ -68,7 +68,8 @@ def create_container(params, other_params=None, daemon_client=None, **_):
             port_used.append(port['PublicPort'])
     if not isinstance(params['ports'], list):
         params['ports'] = []
-    for port in params['ports']:
+    ports = list(params['ports'])
+    for port in ports:
         for new_port in range(port, port+100):
             if new_port not in port_used:
                 params['ports'].remove(port)

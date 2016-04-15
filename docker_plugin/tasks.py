@@ -109,7 +109,7 @@ def create_container(params, other_params=None, daemon_client=None, **_):
 
 
 @operation
-def start(params, processes_to_wait_for, other_params=None, retry_interval,
+def start(params, processes_to_wait_for, retry_interval, other_params=None,
           daemon_client=None, **_):
     """ cloudify.docker.container type start lifecycle operation.
         Any properties and runtime_properties set in the create

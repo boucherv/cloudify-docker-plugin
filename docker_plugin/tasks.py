@@ -162,7 +162,7 @@ def start(params, processes_to_wait_for, other_params=None, retry_interval,
                 i = i + range_size
                 if i not in port_used:
                     for p in range(i, i+range_size):
-                        if p_range['protocol'] = 'udp':
+                        if p_range['protocol'] == 'udp':
                             arguments['port_bindings'][str(new_port)+'/udp'] = p
                         else:
                             arguments['port_bindings'][str(new_port)] = p

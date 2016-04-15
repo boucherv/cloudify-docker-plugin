@@ -30,7 +30,7 @@ from docker_plugin import docker_client
 
 
 @operation
-def create_container(params, daemon_client=None, other_params=None, **_):
+def create_container(params, other_params=None, daemon_client=None, **_):
     """ cloudify.docker.container type create lifecycle operation.
         Creates a container that can then be .start() ed.
 
@@ -109,8 +109,8 @@ def create_container(params, daemon_client=None, other_params=None, **_):
 
 
 @operation
-def start(params, processes_to_wait_for, retry_interval,
-          daemon_client=None, other_params=None, **_):
+def start(params, processes_to_wait_for, other_params=None, retry_interval,
+          daemon_client=None, **_):
     """ cloudify.docker.container type start lifecycle operation.
         Any properties and runtime_properties set in the create
         lifecycle operation also available in start.

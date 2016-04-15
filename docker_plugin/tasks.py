@@ -85,7 +85,7 @@ def create_container(params, other_params=None, daemon_client=None, **_):
                 i = i + range_size
                 if i not in port_used:
                     for p in range(i, i+range_size):
-                        if p_range['protocol'] = 'udp':
+                        if p_range['protocol'] == 'udp':
                             params['ports'].append((p, 'udp'))
                         else:
                             params['ports'].append(p)

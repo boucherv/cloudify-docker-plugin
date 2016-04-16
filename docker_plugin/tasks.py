@@ -85,12 +85,16 @@ def create_container(params, other_params=None, daemon_client=None, **_):
             while i < p_range['min'] + range_size*10:
                 i = i + range_size
                 if i not in port_used:
+                    port_range_min = i
                     for p in range(i, i+range_size):
                         if p_range['protocol'] == 'udp':
                             params['ports'].append((p, 'udp'))
                         else:
                             params['ports'].append(p)
                     break
+    params['environment']['PORT_RANGE_MIN'] = port_range_min
+    params['environment']['PORT_RANGE_MAX'] = port_range_min + range_size
+    params['environment']['PORT'] = new_port
 
     arguments = dict()
     arguments['name'] = ctx.instance.id

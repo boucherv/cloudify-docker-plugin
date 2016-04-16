@@ -149,7 +149,7 @@ def start(params, processes_to_wait_for, retry_interval, other_params=None,
             port_used.append(port.get('PublicPort'))
 
     arguments.update(params)
-    for ports in arguments['port_bindings']:
+    for ports in params['port_bindings']:
         old_port = arguments['port_bindings'][ports]
         for new_port in range(old_port, old_port+100):
             if new_port not in port_used:

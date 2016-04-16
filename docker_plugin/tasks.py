@@ -86,7 +86,7 @@ def create_container(params, other_params=None, daemon_client=None, **_):
                 i = i + range_size
                 if i not in port_used:
                     port_range_min = i
-                    for p in range(i, i+range_size):
+                    for p in range(i, i+range_size+1):
                         if p_range['protocol'] == 'udp':
                             params['ports'].append((p, 'udp'))
                         else:
@@ -166,7 +166,7 @@ def start(params, processes_to_wait_for, retry_interval, other_params=None,
             while i < p_range['min'] + range_size*10:
                 i = i + range_size
                 if i not in port_used:
-                    for p in range(i, i+range_size):
+                    for p in range(i, i+range_size+1):
                         if p_range['protocol'] == 'udp':
                             arguments['port_bindings'][str(p)+'/udp'] = p
                         else:

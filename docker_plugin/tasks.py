@@ -65,7 +65,7 @@ def create_container(params, other_params=None, daemon_client=None, **_):
     port_used = []
     for ct in response:
         for port in ct['Ports']:
-            port_used.append(port['PublicPort'])
+            port_used.append(port.get('PublicPort'))
     if not isinstance(params['ports'], list):
         params['ports'] = []
     ports = list(params['ports'])
@@ -142,7 +142,7 @@ def start(params, processes_to_wait_for, retry_interval, other_params=None,
     port_used = []
     for ct in response:
         for port in ct['Ports']:
-            port_used.append(port['PublicPort'])
+            port_used.append(port.get('PublicPort'))
 
     arguments.update(params)
     for ports in arguments['port_bindings']:
@@ -164,9 +164,9 @@ def start(params, processes_to_wait_for, retry_interval, other_params=None,
                 if i not in port_used:
                     for p in range(i, i+range_size):
                         if p_range['protocol'] == 'udp':
-                            arguments['port_bindings'][str(new_port)+'/udp'] = p
+                            arguments['port_bindings'][str(p)+'/udp'] = p
                         else:
-                            arguments['port_bindings'][str(new_port)] = p
+                            arguments['port_bindings'][str(p)] = p
                     break
 
     ctx.instance.runtime_properties['exp_port'] = new_port

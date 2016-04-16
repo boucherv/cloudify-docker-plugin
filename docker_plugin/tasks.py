@@ -155,6 +155,7 @@ def start(params, processes_to_wait_for, retry_interval, other_params=None,
             if new_port not in port_used:
                 arguments['port_bindings'].pop(ports)
                 arguments['port_bindings'][str(new_port)+'/udp'] = new_port
+                arguments['port_bindings'][str(new_port)] = new_port
                 break
 
     ctx.logger.info('Other arguments: {0}'.format(other_params))
